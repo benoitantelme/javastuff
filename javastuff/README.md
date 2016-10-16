@@ -33,5 +33,5 @@ A11 | A12     B11 | B12     A11*B11 | A11*B12     A12*B21 | A12*B22
 A21 | A22     B21 | B21     A21*B11 | A21*B21     A22*B21 | A22*B22 
 ```
 
-![Alt Text](https://github.com/benoitantelme/javastuff/raw/master/resources/matrixMultiplicationTime.png)
+![Alt Text](https://github.com/benoitantelme/javastuff/raw/master/javastuff/resources/matrixMultiplicationTime.png)
 We can see that while the single threaded method is faster here for n < 128. Then it becomes way slower than the concurrent one.
