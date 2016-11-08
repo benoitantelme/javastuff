@@ -7,6 +7,8 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
+import com.java.stuff.util.Tools;
+
 public class Comparison {
 
 	private static long times = 99999999l;
@@ -15,37 +17,37 @@ public class Comparison {
 		long startTime = System.currentTimeMillis();
 
 		testBigDecimal();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testBigDecimalWithoutDecimals();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testObjectDouble();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testObjectLong();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testPrimitiveDouble();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testDoublePrimitiveWithoutDecimals();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testLongWithoutDecimals();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testDoubleStream();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testLongStream();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testParallelDoubleStream();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 		testParallelLongStream();
-		startTime = printAndResetTime(startTime);
+		startTime = Tools.printAndResetTime(startTime);
 
 	}
 
@@ -87,7 +89,7 @@ public class Comparison {
 	}
 
 	private static void testObjectLong() {
-		Long obj = new Long(0);
+		Long obj = Long.valueOf(0);
 
 		for (long i = 0; i < times; i++)
 			obj += 2l;
@@ -105,11 +107,9 @@ public class Comparison {
 	}
 
 	private static void testBigDecimalWithoutDecimals() {
-		BigDecimal bd = new BigDecimal("0.2");
+		BigDecimal bd = new BigDecimal("2");
 		BigDecimal counter = new BigDecimal("0");
 
-		counter = new BigDecimal("0");
-		bd = new BigDecimal("2");
 		for (long i = 0; i < times; i++)
 			counter = counter.add(bd);
 
@@ -142,11 +142,6 @@ public class Comparison {
 		OptionalLong res = ls.parallel().reduce((x, y) -> x + y);
 
 		System.out.println("For parallel long stream without decimals the value is " + res.getAsLong());
-	}
-
-	private static long printAndResetTime(long startTime) {
-		System.out.println("Total time = " + (System.currentTimeMillis() - startTime) + " ms");
-		return System.currentTimeMillis();
 	}
 
 }
