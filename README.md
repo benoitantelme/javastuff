@@ -4,6 +4,16 @@ javastuff
 Various code in core java
 
 
+Serialization
+-------
+We compare serialization, externalization (using objects or handling arrays manually with indexes) and ByteBuffers with channels to write an object to a file.
+
+|| Serialization | ''Manual'' Externalization | Externalization | ByteBuffer and Channel |
+|--- | --- | --- | --- | --- |
+| file size in bytes | 800154 | 800021 | 804110 | 199999998 |
+| serialization time | 607 ms | 567 ms | 554 ms | 223 ms |
+| de-serialization time | 214 ms | 357 ms | 144 ms | 87 ms |
+
 Sum comparison
 -------
 We add numbers and compare doubles, longs, BigDecimals with and without decimals. Same thing for streams and parallel streams of doubles and longs, with and without decimals.

@@ -11,13 +11,13 @@ import java.util.Random;
 
 import com.java.stuff.util.Tools;
 
-public class SerializationTest
-{
+public class SerializationTest {
 
 	private static final String BYTES = " bytes";
 	private static final String SERIALIZATION = "serialization";
 	private static final String EXTERNALIZATION = "externalization";
 	private static final String DIRECT_EXTERNALIZATION = "direct externalization";
+	private static final String BYTE_BUFFER = "byte buffer";
 	private static final String COLONS = ":";
 	private static final String EQUALS = " = ";
 	private static final String FILE_SIZE_FOR = "File size for ";
@@ -34,8 +34,10 @@ public class SerializationTest
 	private static void testForSimpleObjects(int times, double[] generatedArray) throws IOException {
 		TestObject serializableObject = new TestObject(13l, true, generatedArray, "text");
 		ExternalizableObject externalizableObject = new ExternalizableObject(13l, true, generatedArray, "text");
-		DirectlyExternalizableObject directlyExternalizableObject = new DirectlyExternalizableObject(13l, true, generatedArray, "text");
-		
+		DirectlyExternalizableObject directlyExternalizableObject = new DirectlyExternalizableObject(13l, true,
+				generatedArray, "text");
+		ByteBufferedObject byteBufferedObject = new ByteBufferedObject(13l, true, generatedArray, "text");
+
 		String path = PATH + "//serializableObject";
 		System.out.println(SERIALIZATION + COLONS);
 		serializeLoop(times, path, serializableObject);
@@ -57,17 +59,45 @@ public class SerializationTest
 		serializeLoop(times, path, directlyExternalizableObject);
 
 		System.out.println(FOR_DE + DIRECT_EXTERNALIZATION + COLONS);
-		DirectlyExternalizableObject deserializedDirectlyExt = deserializeLoop(times, path, DirectlyExternalizableObject.class);
+		DirectlyExternalizableObject deserializedDirectlyExt = deserializeLoop(times, path,
+				DirectlyExternalizableObject.class);
 		long directyExternalizedSize = Files.size(Paths.get(path));
 
-		System.out
-				.println("\nObjects are equal: "
-						+ (serializableObject.equals(deserialized) || deserialized.equals(deserializedExt) || deserialized
-								.equals(deserializedDirectlyExt)));
+		path = PATH + "//ByteBufferObject";
+		System.out.println(BYTE_BUFFER + COLONS);
+		writeByteBufferLoop(times, path, byteBufferedObject);
+
+		System.out.println(FOR_DE + BYTE_BUFFER + COLONS);
+		ByteBufferedObject byteBuffered = readByteBufferLoop(times, path);
+		long byteBufferedSize = Files.size(Paths.get(path));
+
+		System.out.println("\nObjects are equal: "
+				+ (serializableObject.equals(deserialized) || deserialized.equals(deserializedExt)
+						|| deserialized.equals(deserializedDirectlyExt) || deserialized.equals(byteBuffered)));
 
 		System.out.println(FILE_SIZE_FOR + SERIALIZATION + EQUALS + serializedSize + BYTES);
 		System.out.println(FILE_SIZE_FOR + EXTERNALIZATION + EQUALS + externalizedSize + BYTES);
 		System.out.println(FILE_SIZE_FOR + DIRECT_EXTERNALIZATION + EQUALS + directyExternalizedSize + BYTES);
+		System.out.println(FILE_SIZE_FOR + BYTE_BUFFER + EQUALS + byteBufferedSize + BYTES);
+	}
+	
+	private static void writeByteBufferLoop(int times, String path, ByteBufferedObject object) {
+		long startTime = System.nanoTime();
+
+		for (int i = 0; i < times; i++)
+			object.writeToFile(path);
+		Tools.printAndResetTime(startTime);
+	}
+	
+	private static ByteBufferedObject readByteBufferLoop(int times, String path) {
+		long startTime = System.nanoTime();
+		ByteBufferedObject object = null;
+
+		for (int i = 0; i < times; i++)
+			object = ByteBufferedObject.readFromFile(path);
+		Tools.printAndResetTime(startTime);
+		
+		return object;
 	}
 
 	private static <T> void serializeLoop(int times, String path, Object object) {
@@ -92,8 +122,7 @@ public class SerializationTest
 		try (FileOutputStream fo = new FileOutputStream(path); ObjectOutputStream os = new ObjectOutputStream(fo)) {
 			os.writeObject(testObject);
 			os.flush();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -104,8 +133,7 @@ public class SerializationTest
 		T testObject = null;
 		try (FileInputStream fi = new FileInputStream(path); ObjectInputStream is = new ObjectInputStream(fi)) {
 			testObject = (T) is.readObject();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}

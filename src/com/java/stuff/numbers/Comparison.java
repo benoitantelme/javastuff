@@ -14,7 +14,7 @@ public class Comparison {
 	private static long times = 99999999l;
 
 	public static void main(String[] args) {
-		long startTime = System.currentTimeMillis();
+		long startTime = System.nanoTime();
 
 		testBigDecimal();
 		startTime = Tools.printAndResetTime(startTime);
