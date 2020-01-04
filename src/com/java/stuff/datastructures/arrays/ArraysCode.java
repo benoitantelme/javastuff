@@ -16,6 +16,10 @@ public class ArraysCode {
         array = new int[]{1, 2, 3, 4};
         reverse(array);
         System.out.println(Arrays.toString(array));
+
+        array = new int[]{0, 1, 2, 4, 8, 0, 9, 0};
+        pushZeros(array);
+        System.out.println(Arrays.toString(array));
     }
 
     private static void rotateLeft(int[] array, int n) {
@@ -44,6 +48,17 @@ public class ArraysCode {
             start ++;
             end --;
         }
+    }
+
+    private static void pushZeros(int[] array) {
+        int p = 0;
+
+        for(int i = 0; i < array.length; i++)
+            if(array[i] != 0)
+                array[p++] = array[i];
+
+        for(int i = p; i < array.length; i++)
+            array[i] = 0;
     }
 
 }
