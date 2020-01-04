@@ -24,7 +24,8 @@ public class ArraysCode {
         array = new int[]{3, 5, 4, 2, 7, 3, 1, 0, 5, 1, 7, 3};
         System.out.println("distance min between 5 et 7: " + distanceMin(array, 5, 7));
 
-
+        array = new int[]{-2, -3, 4, -1, -2, 1, 5, -3};
+        System.out.println("Max sum of sub array: " + sumMaxSubArray(array));
     }
 
     private static void rotateLeft(int[] array, int n) {
@@ -91,6 +92,23 @@ public class ArraysCode {
         }
 
         return min;
+    }
+
+    /**
+     * @param array
+     * @return sum of max sub array using kadane dynamic programming
+     */
+    private static int sumMaxSubArray(int[] array) {
+        int max = Integer.MIN_VALUE;
+        int localMax = 0;
+
+        for(int i =0; i < array.length; i++){
+            localMax = Math.max(0, localMax + array[i]);
+            if(localMax > max)
+                max = localMax;
+        }
+
+        return max;
     }
 
 }
