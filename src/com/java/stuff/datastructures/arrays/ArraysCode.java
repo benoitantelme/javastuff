@@ -13,8 +13,10 @@ public class ArraysCode {
         rotateLeft(array, 2);
         System.out.println(Arrays.toString(array));
 
+        array = new int[]{1, 2, 3, 4};
+        reverse(array);
+        System.out.println(Arrays.toString(array));
     }
-
 
     private static void rotateLeft(int[] array, int n) {
         int p = array.length - n;
@@ -30,5 +32,18 @@ public class ArraysCode {
         }
     }
 
+    private static void reverse(int[] array) {
+        int start = 0;
+        int end = array.length-1;
+        int tmp;
+
+        while(start < end){
+            tmp = array[start];
+            array[start] = array[end];
+            array[end] = tmp;
+            start ++;
+            end --;
+        }
+    }
 
 }
