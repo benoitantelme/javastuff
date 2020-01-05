@@ -1,5 +1,8 @@
 package com.java.stuff.datastructures.linkedlists;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class LkdList {
 
     public static void main(String[] args) {
@@ -23,7 +26,27 @@ public class LkdList {
         list.printList();
 
         list.reverse();
-        System.out.println("\nReversed list: ");
+        System.out.println("Reversed list: ");
+        list.printList();
+
+        list = new LkdList();
+        list.add(1);
+        list.add(10);
+        list.add(100);
+        list.add(1000);
+        list.add(1);
+        list.add(10);
+        list.add(100);
+        list.add(1000);
+        list.add(1);
+        list.add(10);
+        list.add(10);
+        list.add(5);
+        System.out.println("List: ");
+        list.printList();
+
+        list.removeDuplicates();
+        System.out.println("\nCleaned up list: ");
         list.printList();
     }
 
@@ -40,7 +63,7 @@ public class LkdList {
         Node normalPointer = first;
         Node fastPointer = first;
 
-        while (normalPointer != null && fastPointer != null) {
+        while (normalPointer != null && fastPointer != null && fastPointer.next != null) {
             normalPointer = normalPointer.next;
             fastPointer = fastPointer.next.next;
 
@@ -66,6 +89,23 @@ public class LkdList {
         first = previous;
     }
 
+    void removeDuplicates() {
+        Set<Integer> hashset = new HashSet<>();
+        Node previous = null;
+        Node current = first;
+
+        while (current != null) {
+            if(hashset.contains(current.nbr)){
+                previous.next =  current.next;
+            }else{
+                hashset.add(current.nbr);
+                previous = current;
+            }
+
+            current = current.next;
+        }
+    }
+
     void printList() {
         if (containsLoop())
             return;
@@ -75,6 +115,7 @@ public class LkdList {
             System.out.print(node.nbr + " ");
             node = node.next;
         }
+        System.out.println();
     }
 
     static class Node {
