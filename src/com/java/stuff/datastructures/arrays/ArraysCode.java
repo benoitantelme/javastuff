@@ -28,7 +28,7 @@ public class ArraysCode {
         System.out.println("Max sum of sub array: " + sumMaxSubArray(array));
     }
 
-    private static void rotateLeft(int[] array, int n) {
+    static void rotateLeft(int[] array, int n) {
         int p = array.length - n;
 
         for (int i = 0; i < n; i++) {
@@ -42,7 +42,7 @@ public class ArraysCode {
         }
     }
 
-    private static void reverse(int[] array) {
+    static void reverse(int[] array) {
         int start = 0;
         int end = array.length-1;
         int tmp;
@@ -56,7 +56,7 @@ public class ArraysCode {
         }
     }
 
-    private static void pushZeros(int[] array) {
+    static void pushZeros(int[] array) {
         int p = 0;
 
         for(int i = 0; i < array.length; i++)
@@ -67,7 +67,7 @@ public class ArraysCode {
             array[i] = 0;
     }
 
-    private static int distanceMin(int[] array, int a, int b) {
+    static int distanceMin(int[] array, int a, int b) {
         int min = Integer.MAX_VALUE;
         int previous = 0;
 
@@ -98,7 +98,7 @@ public class ArraysCode {
      * @param array
      * @return sum of max sub array using kadane dynamic programming
      */
-    private static int sumMaxSubArray(int[] array) {
+    static int sumMaxSubArray(int[] array) {
         int max = Integer.MIN_VALUE;
         int localMax = 0;
 
