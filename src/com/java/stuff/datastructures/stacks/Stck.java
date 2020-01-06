@@ -63,7 +63,6 @@ public class Stck {
         return result;
     }
 
-
     /**
      * @param a            index of first person
      * @param b            index of second person
@@ -76,7 +75,6 @@ public class Stck {
                 false;
         return res;
     }
-
 
     /**
      * @param peopleMatrix matrix of who knows who at the party
@@ -200,6 +198,6 @@ public class Stck {
         towerOfHanoi(2);
         System.out.println();
         towerOfHanoi(3);
-
     }
+
 }
