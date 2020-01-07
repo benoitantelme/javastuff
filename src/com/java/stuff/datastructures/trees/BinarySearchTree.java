@@ -1,31 +1,17 @@
 package com.java.stuff.datastructures.trees;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 public class BinarySearchTree {
-    class Node {
-        int value;
-        Node left;
-        Node right;
-
-        Node(int value) {
-            this.value = value;
-            right = null;
-            left = null;
-        }
-    }
-
-    Node root;
+    BstNode root;
 
 
     public void add(int value) {
         root = addRecursive(root, value);
     }
-
-    private Node addRecursive(Node current, int value) {
+    private BstNode addRecursive(BstNode current, int value) {
         if (current == null) {
-            return new Node(value);
+            return new BstNode(value);
         }
 
         if (value < current.value) {
@@ -40,12 +26,10 @@ public class BinarySearchTree {
         return current;
     }
 
-
     public boolean containsNode(int value) {
         return containsNodeRecursive(root, value);
     }
-
-    private boolean containsNodeRecursive(Node current, int value) {
+    private boolean containsNodeRecursive(BstNode current, int value) {
         if (current == null) {
             return false;
         }
@@ -59,12 +43,13 @@ public class BinarySearchTree {
                 : containsNodeRecursive(current.right, value);
     }
 
-
     public void delete(int value) {
         root = deleteRecursive(root, value);
     }
-
-    private Node deleteRecursive(Node current, int value) {
+    private int findSmallestValue(BstNode root) {
+        return root.left == null ? root.value : findSmallestValue(root.left);
+    }
+    private BstNode deleteRecursive(BstNode current, int value) {
         if (current == null) {
             return null;
         }
@@ -95,20 +80,15 @@ public class BinarySearchTree {
         return current;
     }
 
-    private int findSmallestValue(Node root) {
-        return root.left == null ? root.value : findSmallestValue(root.left);
-    }
-
-
     public void breadthFirstSearch() {
         if (root == null)
             return;
 
-        Queue<Node> nodes = new LinkedList<>();
+        Queue<BstNode> nodes = new LinkedList<>();
         nodes.add(root);
 
         while (!nodes.isEmpty()) {
-            Node current = nodes.poll();
+            BstNode current = nodes.poll();
             System.out.print(current.value + " ");
             if (current.left != null)
                 nodes.add(current.left);
@@ -117,7 +97,7 @@ public class BinarySearchTree {
         }
     }
 
-    public void depthFirstSearchPostOrder(Node current) {
+    public void depthFirstSearchPostOrder(BstNode current) {
         if (current == null)
             return;
 
@@ -129,7 +109,7 @@ public class BinarySearchTree {
         System.out.print(current.value + " ");
     }
 
-    public void depthFirstSearchPreOrder(Node current) {
+    public void depthFirstSearchPreOrder(BstNode current) {
         if (current == null)
             return;
 
@@ -140,7 +120,7 @@ public class BinarySearchTree {
             depthFirstSearchPreOrder(current.right);
     }
 
-    public void depthFirstSearchInOrder(Node current) {
+    public void depthFirstSearchInOrder(BstNode current) {
         if (current == null)
             return;
 
@@ -151,25 +131,91 @@ public class BinarySearchTree {
             depthFirstSearchInOrder(current.right);
     }
 
-    public int getMin(Node current){
-        if(current == null)
+    public int getMin(BstNode current) {
+        if (current == null)
             return -1;
 
-        if(current.left == null)
+        if (current.left == null)
             return current.value;
         else
             return getMin(current.left);
     }
 
-    public int getMax(Node current){
-        if(current == null)
+    public int getMax(BstNode current) {
+        if (current == null)
             return -1;
 
-        if(current.right == null)
+        if (current.right == null)
             return current.value;
         else
             return getMax(current.right);
     }
+
+    /**
+     * @param current node, start with roots
+     * @param result  a list with in order values of the tree
+     */
+    public static void inOrderList(BstNode current, List<Integer> result) {
+        if (current == null)
+            return;
+
+        if (current.left != null)
+            inOrderList(current.left, result);
+        result.add(current.value);
+        if (current.right != null)
+            inOrderList(current.right, result);
+    }
+    public static int[] mergeLists(List<Integer> list1, List<Integer> list2) {
+        int n1 = list1.size();
+        int n2 = list2.size();
+        int[] mergedArray = new int[n1 + n2];
+        int i = 0, j = 0, k = 0;
+
+        while (i < n1 && j < n2) {
+            if (list1.get(i) < list2.get(j))
+                mergedArray[k++] = list1.get(i++);
+            else
+                mergedArray[k++] = list2.get(j++);
+        }
+
+        while (i < n1)
+            mergedArray[k++] = list1.get(i++);
+
+        while (j < n2)
+            mergedArray[k++] = list2.get(j++);
+
+        return mergedArray;
+    }
+    static BstNode arrayToBST(int arr[], int start, int end) {
+        if (start > end) {
+            return null;
+        }
+
+        int mid = (start + end) / 2;
+        BstNode node = new BstNode(arr[mid]);
+
+        node.left = arrayToBST(arr, start, mid - 1);
+        node.right = arrayToBST(arr, mid + 1, end);
+
+        return node;
+    }
+    public static BinarySearchTree mergeTrees(BinarySearchTree tree1, BinarySearchTree tree2) {
+        List<Integer> list1 = new ArrayList<>();
+        inOrderList(tree1.root, list1);
+        System.out.println("First list: " + Arrays.asList(list1));
+
+        List<Integer> list2 = new ArrayList<>();
+        inOrderList(tree2.root, list2);
+        System.out.println("Second list: " + Arrays.asList(list2));
+
+        int[] mergedArray = mergeLists(list1, list2);
+        System.out.println("Merged list: " + Arrays.toString(mergedArray));
+
+        BinarySearchTree result = new BinarySearchTree();
+        result.root = arrayToBST(mergedArray, 0, mergedArray.length-1);
+        return result;
+    }
+
 
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
@@ -195,6 +241,20 @@ public class BinarySearchTree {
         System.out.println("\nMax");
         System.out.print(bst.getMax(bst.root));
 
+        BinarySearchTree tree1 = new BinarySearchTree();
+        tree1.add(100);
+        tree1.add(50);
+        tree1.add(300);
+        tree1.add(20);
+
+        BinarySearchTree tree2 = new BinarySearchTree();
+        tree2.add(70);
+        tree2.add(80);
+        tree2.add(40);
+        tree2.add(120);
+
+        BinarySearchTree tree3 = mergeTrees(tree1, tree2);
+        tree3.depthFirstSearchInOrder(tree3.root);
     }
 
 }
