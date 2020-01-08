@@ -216,6 +216,25 @@ public class BinarySearchTree {
         return result;
     }
 
+    private static void preOrderBuild(BstNode current, Queue<Integer> values) {
+        if (current == null)
+            return;
+
+        current.value = values.poll();
+        if (current.left != null)
+            preOrderBuild(current.left, values);
+        if (current.right != null)
+            preOrderBuild(current.right, values);
+    }
+    public static BstNode bstToMinHeap(BstNode current) {
+        LinkedList<Integer> inOrderList = new LinkedList<>();
+        BinarySearchTree.inOrderList(current, inOrderList);
+
+        preOrderBuild(current, inOrderList);
+
+        return current;
+    }
+
 
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
@@ -253,8 +272,24 @@ public class BinarySearchTree {
         tree2.add(40);
         tree2.add(120);
 
+        System.out.println();
         BinarySearchTree tree3 = mergeTrees(tree1, tree2);
+        System.out.print("Ordered tree: ");
         tree3.depthFirstSearchInOrder(tree3.root);
+
+        bst = new BinarySearchTree();
+        bst.add(4);
+        bst.add(2);
+        bst.add(6);
+        bst.add(1);
+        bst.add(3);
+        bst.add(5);
+        bst.add(7);
+        System.out.println("\nBST BFS:");
+        bst.breadthFirstSearch();
+        bst.root = bstToMinHeap(bst.root);
+        System.out.println("\nMin Heap DFS pre order:");
+        bst.depthFirstSearchPreOrder(bst.root);
     }
 
 }
