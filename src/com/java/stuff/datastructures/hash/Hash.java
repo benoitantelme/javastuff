@@ -1,9 +1,6 @@
 package com.java.stuff.datastructures.hash;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 
 public class Hash {
     public static boolean isSubset(int[] array1, int[] array2) {
@@ -38,6 +35,8 @@ public class Hash {
 
         for (int i = 0; i < array.length; i++) {
             Integer index = map.get(array[i]);
+
+            //store first index or compare index with first index
             if (index != null)
                 maxDistance = Math.max(maxDistance, i - index);
             else
@@ -47,29 +46,59 @@ public class Hash {
         return maxDistance;
     }
 
-    public static int topOccurence(int[] array){
+    public static int maxOccurrence(int[] array) {
         int max = Integer.MIN_VALUE;
         Map<Integer, Integer> map = new HashMap<>();
 
-        for(int i : array){
-            int value = map.merge(i, 1, (a, b) -> a+b);
-            if(max < value)
+        for (int i : array) {
+            int value = map.merge(i, 1, (a, b) -> a + b);
+            if (max < value)
                 max = value;
         }
 
         return max;
     }
 
-    public static int[] topKOccurence(int[] array, int k){
-        int[] top = new int[k];
+    /**
+     * @param array
+     * @param k
+     * @return list of top k indices using a bucket sort like (complexity O(n))
+     */
+    public static List<Integer> topKOccurrences(int[] array, int k) {
+        int max = Integer.MIN_VALUE;
         Map<Integer, Integer> map = new HashMap<>();
 
-        //TODO finish topk
-//        for(int i : array)
-//            map.merge(i, 1, (k, v) -> v == null ? 1 : v+1);
+        // count occurrences and keep max
+        for (int i : array) {
+            int value = map.merge(i, 1, (a, b) -> a + b);
+            if (max < value)
+                max = value;
+        }
 
+        // Array of lists, frequency to numbers
+        ArrayList<Integer>[] arr = new ArrayList[max + 1];
+        for (int i = 1; i <= max; i++)
+            arr[i] = new ArrayList<>();
 
-        return top;
+        // filling the array
+        for (Map.Entry<Integer, Integer> entry : map.entrySet())
+            arr[entry.getValue()].add(entry.getKey());
+
+        // return top k numbers
+        List<Integer> result = new ArrayList<>();
+        for (int j = max; j >= 1; j--) {
+            if (!arr[j].isEmpty()) {
+                for (int a : arr[j]) {
+                    result.add(a);
+
+                    if (result.size() == k) {
+                        return result;
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     public static void main(String[] args) {
@@ -87,7 +116,7 @@ public class Hash {
         int[] arr = {3, 2, 1, 2, 1, 4, 5, 8, 6, 7, 4, 2};
         System.out.println("Array: " + Arrays.toString(arr));
         System.out.println("Max distance between two values in array: " + maxDistanceBetweenTwoValues(arr));
-        System.out.println("Top occurence: " + topOccurence(arr));
-//        System.out.println(Arrays.toString(topKOccurency(arr)));
+        System.out.println("Max occurence: " + maxOccurrence(arr));
+        System.out.println("Top k: " + topKOccurrences(arr, 4));
     }
 }
