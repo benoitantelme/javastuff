@@ -40,7 +40,6 @@ public class GraphL {
                     visited[vertice] = true;
                 }
             }
-
         }
     }
 
@@ -61,8 +60,33 @@ public class GraphL {
                     visited[vertice] = true;
                 }
             }
-
         }
+    }
+
+    public int shortestDistanceBetween(int start, int finish){
+        boolean[] visited = new boolean[list.length];
+        LinkedList<Integer> queue = new LinkedList<>();
+        int[] distances = new int[list.length];
+
+        queue.add(start);
+        visited[start] = true;
+
+        while(!queue.isEmpty()){
+            int current = queue.poll();
+
+            for(Integer vertice : list[current]){
+                if(!visited[vertice]) {
+                    queue.add(vertice);
+                    visited[vertice] = true;
+
+                    distances[vertice] = distances[current] + 1;
+                    if(vertice == finish)
+                        return distances[vertice];
+                }
+            }
+        }
+
+        return -1;
     }
 
     public static void main(String[] args) {
@@ -77,6 +101,16 @@ public class GraphL {
         System.out.println("DFS: ");
         g.dfs(0);
 
+        g = new GraphL(7);
+        g.addEdges(new int[]{0, 0, 0, 1, 1, 2, 2, 2, 3, 4, 4, 4, 4, 5, 5, 6},
+                   new int[]{1, 2, 4, 0, 2, 0, 1, 5, 4, 0, 3, 5, 6, 2, 4, 4});
+
+
+        System.out.println("BFS new tree: ");
+        g.bfs(0);
+
+        System.out.println("Shortest distance between 1 and 5: " + g.shortestDistanceBetween(1, 5));
+        System.out.println("Shortest distance between 1 and 3: " + g.shortestDistanceBetween(1, 3));
     }
 
 }
