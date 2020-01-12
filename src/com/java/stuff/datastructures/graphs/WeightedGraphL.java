@@ -1,5 +1,7 @@
 package com.java.stuff.datastructures.graphs;
 
+import com.java.stuff.datastructures.hash.Hash;
+
 import java.util.*;
 
 public class WeightedGraphL {
@@ -50,18 +52,24 @@ public class WeightedGraphL {
     static void calculateShortestPathFromSource(Node start) {
         start.distance = 0;
 
+        HashSet<Node> addedNodes = new HashSet<>();
         Queue<Node> unsettledNodes = new PriorityQueue<>();
         unsettledNodes.add(start);
+        addedNodes.add(start);
 
         while (!unsettledNodes.isEmpty()) {
             Node current = unsettledNodes.poll();
+            addedNodes.remove(current);
 
             for (Map.Entry<Node, Integer> adjacent : current.adjacentNodes.entrySet()) {
                 Node nextNode = adjacent.getKey();
                 int distance = adjacent.getValue();
                 if (!nextNode.evaluated) {
                     current.updateMinimumDistance(nextNode, distance);
-                    unsettledNodes.add(nextNode);
+                    if(!addedNodes.contains(nextNode)) {
+                        unsettledNodes.add(nextNode);
+                        addedNodes.add(nextNode);
+                    }
                 }
             }
 
