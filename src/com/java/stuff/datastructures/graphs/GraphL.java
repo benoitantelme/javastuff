@@ -1,6 +1,7 @@
 package com.java.stuff.datastructures.graphs;
 
 import java.util.LinkedList;
+import java.util.Stack;
 
 /**
  * Directed graph using an adjacency list representation
@@ -31,10 +32,9 @@ public class GraphL {
 
         while(!queue.isEmpty()){
             int current = queue.poll();
+            System.out.println(current);
 
             for(Integer vertice : list[current]){
-                System.out.println(current + " to " + vertice);
-
                 if(!visited[vertice]) {
                     queue.add(vertice);
                     visited[vertice] = true;
@@ -44,15 +44,38 @@ public class GraphL {
         }
     }
 
+    public void dfs(int start){
+        boolean[] visited = new boolean[list.length];
+        Stack<Integer> stack = new Stack<>();
+
+        stack.add(start);
+        visited[start] = true;
+
+        while(!stack.isEmpty()){
+            int current = stack.pop();
+            System.out.println(current);
+
+            for(Integer vertice : list[current]){
+                if(!visited[vertice]) {
+                    stack.add(vertice);
+                    visited[vertice] = true;
+                }
+            }
+
+        }
+    }
 
     public static void main(String[] args) {
         GraphL g = new GraphL(4);
 
         g.addEdges(new int[]{0, 0, 1 , 2, 2, 3},
                    new int[]{1, 2, 2, 0, 3, 3});
-        
+
         System.out.println("BFS: ");
         g.bfs(0);
+
+        System.out.println("DFS: ");
+        g.dfs(0);
 
     }
 
