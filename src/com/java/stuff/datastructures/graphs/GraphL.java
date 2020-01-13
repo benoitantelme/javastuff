@@ -1,6 +1,8 @@
 package com.java.stuff.datastructures.graphs;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -148,6 +150,32 @@ public class GraphL {
         return false;
     }
 
+    public List<Integer> topologicalSort() {
+        List<Integer> result = new ArrayList<>();
+
+        boolean[] visited = new boolean[list.length];
+        Stack<Integer> stack = new Stack<>();
+
+        for (int i = 0; i < list.length; i++) {
+            for (Integer vertex : list[i]) {
+                if (!visited[vertex]) {
+                    stack.add(vertex);
+                    visited[vertex] = true;
+                }
+            }
+
+            if(!visited[i]) {
+                stack.add(i);
+                visited[i] = true;
+            }
+        }
+
+        for(int i = 0; i < list.length; i++)
+            result.add(stack.pop());
+
+        return result;
+    }
+
     public void printGraph(){
         for(int i = 0 ; i < list.length; i++)
             for(Integer arrival : list[i])
@@ -191,6 +219,13 @@ public class GraphL {
         g.printGraph();
         System.out.println("There is a cycle: " + g.detectCycleDirected(0));
 
+        g = new GraphL(6);
+        g.addEdges(
+                new int[]{2, 3, 4, 4, 5, 5},
+                new int[]{3, 1, 0, 1, 0, 2});
+        System.out.println("For graph: ");
+        g.printGraph();
+        System.out.println("Topological sort is: " + g.topologicalSort());
     }
 
 }
