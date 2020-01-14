@@ -3,10 +3,14 @@ package com.java.stuff.datastructures.graphs;
 import java.util.*;
 
 public class WeightedGraphPrims {
+    int vertices;
     static List<Node>[] graph;
 
     public WeightedGraphPrims(int vertices) {
+        this.vertices = vertices;
         graph = new ArrayList[vertices];
+        for(int i = 0; i < vertices; i++)
+            graph[i] = new ArrayList<>();
     }
 
     void printGraph() {
@@ -20,6 +24,29 @@ public class WeightedGraphPrims {
         Node nodeDest = new Node(src, weight);
         graph[src].add(nodeSrc);
         graph[dest].add(nodeDest);
+    }
+
+    void primsMST(){
+        List<Integer> mst = new ArrayList<>();
+        // min heap with vertices, all key = max appart from first one
+        Queue<NodeKey> queue = new PriorityQueue<NodeKey>();
+        queue.add(new NodeKey(0, 0));
+        for(int i = 1; i < vertices; i++)
+            queue.add(new NodeKey(i, Integer.MAX_VALUE));
+
+
+        while(!queue.isEmpty()){
+            NodeKey node = queue.poll();
+            mst.add(node.vertex);
+
+
+
+
+
+
+        }
+
+
     }
 
     public static void main(String[] args) {
@@ -41,6 +68,9 @@ public class WeightedGraphPrims {
         graphPrims.addEdge(7, 8, 7);
 
         graphPrims.printGraph();
+
+        System.out.println("Prims:");
+        graphPrims.primsMST();
 
 
     }
