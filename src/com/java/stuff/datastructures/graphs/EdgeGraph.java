@@ -1,5 +1,7 @@
 package com.java.stuff.datastructures.graphs;
 
+import java.util.Objects;
+
 /**
  * Graph represented with edges and stored in an array
  */
@@ -14,31 +16,68 @@ public class EdgeGraph {
         }
     }
 
+    static class Subset {
+        int parent, rank;
+
+        Subset(int parent, int rank) {
+            this.parent = parent;
+            this.rank = rank;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Subset)) return false;
+            Subset subset = (Subset) o;
+
+            return parent == subset.parent && parent != -1
+                    && rank == subset.rank;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(parent, rank);
+        }
+    }
+
     Edge[] edges;
-    int[] parents;
+    Subset[] parents;
 
     EdgeGraph(int nbrEdges, int nbrVertices) {
         edges = new Edge[nbrEdges];
 
         // One subset per vertex
-        parents = new int[nbrVertices];
+        parents = new Subset[nbrVertices];
         for (int i = 0; i < nbrVertices; i++)
-            parents[i] = -1;
+            parents[i] = new Subset(-1, -1);
     }
 
-    public void print(){
-        for(Edge edge : edges)
+    public void print() {
+        for (Edge edge : edges)
             System.out.println("Edge:{" + edge.src + "-" + edge.dest + "}");
     }
 
-    private int find(int[] parent, int i) {
-        return parent[i] == -1 ? i : find(parent, parent[i]);
+    private Subset find(Subset[] parent, int i) {
+        return parent[i].parent == -1 ? parent[i] : find(parent, parent[i].parent);
     }
 
-    private void union(int parent[], int x, int y) {
-        int xset = find(parent, x);
-        int yset = find(parent, y);
-        parent[xset] = yset;
+    private void union(Subset parent[], int x, int y) {
+        Subset xroot = find(parent, x);
+        Subset yroot = find(parent, y);
+
+        // same set
+        if (xroot.equals(yroot))
+            return;
+
+        if (xroot.rank < yroot.rank)
+            xroot.parent = y;
+        else if (yroot.rank < xroot.rank)
+            yroot.parent = x;
+        else {
+            xroot.parent = y;
+            yroot.rank += 1;
+        }
+
     }
 
     public boolean unionFindCycle() {
@@ -65,7 +104,7 @@ public class EdgeGraph {
         graph.edges[0] = new Edge(0, 1);
         graph.edges[1] = new Edge(1, 2);
         graph.edges[2] = new Edge(1, 3);
-        System.out.println("For graph: ");
+        System.out.println("\nFor graph: ");
         graph.print();
         System.out.println("graph contains a cycle: " + graph.unionFindCycle());
     }
