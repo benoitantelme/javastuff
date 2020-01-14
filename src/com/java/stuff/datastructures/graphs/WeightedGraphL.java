@@ -1,7 +1,5 @@
 package com.java.stuff.datastructures.graphs;
 
-import com.java.stuff.datastructures.hash.Hash;
-
 import java.util.*;
 
 public class WeightedGraphL {
