@@ -46,10 +46,10 @@ public class EdgeGraph {
     EdgeGraph(int nbrEdges, int nbrVertices) {
         edges = new Edge[nbrEdges];
 
-        // One subset per vertex
+        // One subset per vertex with rank 0 and its own parent
         parents = new Subset[nbrVertices];
         for (int i = 0; i < nbrVertices; i++)
-            parents[i] = new Subset(-1, -1);
+            parents[i] = new Subset(i, 0);
     }
 
     public void print() {
@@ -57,17 +57,27 @@ public class EdgeGraph {
             System.out.println("Edge:{" + edge.src + "-" + edge.dest + "}");
     }
 
+    /**
+     * @param parent
+     * @param i
+     * @return and set the parent subset of this subset if it exists, recursively
+     */
     private Subset find(Subset[] parent, int i) {
-        return parent[i].parent == -1 ? parent[i] : find(parent, parent[i].parent);
+        if (parents[i].parent != i)
+            parents[i].parent = find(parents, parent[i].parent).parent;
+
+        return parents[i];
     }
 
-    private void union(Subset parent[], int x, int y) {
+    /**
+     * @param parent
+     * @param x
+     * @param y      This function is called when the two vertices are not in the same subset
+     *               we set their relation depending on which subset has the highest rank
+     */
+    private void unionByRank(Subset parent[], int x, int y) {
         Subset xroot = find(parent, x);
         Subset yroot = find(parent, y);
-
-        // same set
-        if (xroot.equals(yroot))
-            return;
 
         if (xroot.rank < yroot.rank)
             xroot.parent = y;
@@ -77,15 +87,18 @@ public class EdgeGraph {
             xroot.parent = y;
             yroot.rank += 1;
         }
-
     }
 
     public boolean unionFindCycle() {
-        for (Edge edge : edges)
-            if (find(parents, edge.src) != find(parents, edge.dest))
-                union(parents, edge.src, edge.dest);
-            else
+        for (Edge edge : edges) {
+            Subset sourceSet = find(parents, edge.src);
+            Subset destinationSet = find(parents, edge.dest);
+
+            if (sourceSet.equals(destinationSet))
                 return true;
+            else
+                unionByRank(parents, edge.src, edge.dest);
+        }
 
         return false;
     }
