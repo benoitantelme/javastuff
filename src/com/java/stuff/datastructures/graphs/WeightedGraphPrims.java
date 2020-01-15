@@ -26,27 +26,53 @@ public class WeightedGraphPrims {
         graph[dest].add(nodeDest);
     }
 
-    void primsMST(){
-        List<Integer> mst = new ArrayList<>();
+    int[] primsMST(){
+        //for parents/sources
+        int[] edges = new int[vertices];
+
+        //keeping track of the nodes themselves
+        NodeKey[] nodes = new NodeKey[vertices];
+
+        boolean[] mst = new boolean[vertices];
+
         // min heap with vertices, all key = max appart from first one
-        Queue<NodeKey> queue = new PriorityQueue<NodeKey>();
-        queue.add(new NodeKey(0, 0));
-        for(int i = 1; i < vertices; i++)
-            queue.add(new NodeKey(i, Integer.MAX_VALUE));
+        TreeSet<NodeKey> tree = new TreeSet<>();
 
+        NodeKey firstNode = new NodeKey(0, 0);
+        tree.add(firstNode);
+        nodes[0] = firstNode;
+        edges[0] = -1;
 
-        while(!queue.isEmpty()){
-            NodeKey node = queue.poll();
-            mst.add(node.vertex);
-
-
-
-
-
-
+        for(int i = 1 ; i < vertices; i++) {
+            edges[i] = -1;
+            NodeKey node = new NodeKey(i);
+            tree.add(node);
+            nodes[i] = node;
         }
 
+        while(!tree.isEmpty()){
+            NodeKey node = tree.pollFirst();
+            mst[node.vertex] = true;
 
+            for(Node neighbour : graph[node.vertex]){
+                int neighbourVertex = neighbour.dest;
+                NodeKey neighbourNode = nodes[neighbourVertex];
+
+                // if the neighbour is not in the mst and
+                // its key is higher than the distance we have for this edge, update it as best edge
+                if(mst[neighbourVertex] == false &&
+                        neighbourNode.key > neighbour.distance){
+                    tree.remove(neighbourNode);
+                    neighbourNode.key = neighbour.distance;
+                    tree.add(neighbourNode);
+                    edges[neighbourVertex] = node.vertex;
+                }
+
+
+            }
+        }
+
+        return edges;
     }
 
     public static void main(String[] args) {
@@ -70,14 +96,16 @@ public class WeightedGraphPrims {
         graphPrims.printGraph();
 
         System.out.println("Prims:");
-        graphPrims.primsMST();
+        int[] edges = graphPrims.primsMST();
 
+        for (int i = 1; i < edges.length; i++)
+            System.out.println(edges[i] + " - " + i);
 
     }
 
     public static class Node implements Comparable<Node> {
         int dest;
-        int distance = Integer.MAX_VALUE;
+        int distance;
 
         public Node(int dest, int distance) {
             this.dest = dest;
@@ -123,6 +151,18 @@ public class WeightedGraphPrims {
 
             return 0;
         }
-    }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof NodeKey)) return false;
+            NodeKey nodeKey = (NodeKey) o;
+            return vertex == nodeKey.vertex;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(vertex);
+        }
+    }
 }
