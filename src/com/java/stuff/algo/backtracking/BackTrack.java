@@ -127,6 +127,88 @@ public class BackTrack {
 
     }
 
+    static class Sudoku {
+        int n;
+        int[][] board;
+
+        public Sudoku() {
+            this.n = 9;
+            board = new int[][]
+                    {
+                            {3, 0, 6, 5, 0, 8, 4, 0, 0},
+                            {5, 2, 0, 0, 0, 0, 0, 0, 0},
+                            {0, 8, 7, 0, 0, 0, 0, 3, 1},
+                            {0, 0, 3, 0, 1, 0, 0, 8, 0},
+                            {9, 0, 0, 8, 6, 3, 0, 0, 5},
+                            {0, 5, 0, 0, 9, 0, 6, 0, 0},
+                            {1, 3, 0, 0, 0, 0, 2, 5, 0},
+                            {0, 0, 0, 0, 0, 0, 0, 7, 4},
+                            {0, 0, 5, 2, 0, 6, 3, 0, 0}
+                    };
+        }
+
+        /**
+         * @return the first empty cell coordinate or -1,-1 if there are none left
+         */
+        private int[] pickCell(){
+            int[] result = new int[]{-1, -1};
+
+            for (int i = 0; i < n; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    if (board[i][j] == 0)
+                    {
+                        result[0] = i;
+                        result[1] = j;
+                        return result;
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        boolean isValid(int x, int y, int nbr) {
+            for (int i = 0; i < n; i++)
+                if (board[i][y] == nbr || board[x][i] == nbr)
+                    return false;
+
+            // top left of board subset
+            int xstart = x - x % 3;
+            int ystart = y - y % 3;
+
+            for(int i = xstart; i < xstart+3; i++)
+                for(int j = ystart; j < ystart+3; j++)
+                    if(board[i][j] == nbr)
+                        return false;
+
+            return true;
+        }
+
+        boolean solve(){
+            int[] startCell = pickCell();
+
+            int x = startCell[0];
+            int y = startCell[1];
+            if(x == -1 & y == -1)
+                return true;
+
+            for(int i = 0; i < 10; i++){
+                if(isValid(x, y, i)){
+                    board[x][y] = i;
+                    if(solve())
+                        return true;
+                    else
+                        board[x][y] = 0;
+                }
+            }
+
+            return false;
+        }
+
+    }
+
     static void printMatrix(int[][] mtr) {
         if (mtr != null) {
             for (int i = 0; i < mtr.length; i++) {
@@ -152,6 +234,13 @@ public class BackTrack {
         nq = new NQueens(5);
         solution = nq.solve();
         printMatrix(solution);
+
+        System.out.println("\nSudoku: ");
+        Sudoku sdk = new Sudoku();
+        if(sdk.solve())
+            printMatrix(sdk.board);
+        else
+            System.out.print("No Solution");
     }
 
 }
