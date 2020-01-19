@@ -32,7 +32,7 @@ public class Kmp {
 
         return lpps;
     }
-    static void KMPSearch(String pattern, String text) {
+    static void KMPSearch(String text, String pattern) {
         int[] lpps = computeLongerProperPrefixSuffix(pattern);
         System.out.println("Longer proper prefix suffix: " + Arrays.toString(lpps));
 
@@ -62,13 +62,13 @@ public class Kmp {
         String pattern =   "AAAA";
         System.out.println("For text: " + txt);
         System.out.println("And pattern: " + pattern);
-        new Kmp().KMPSearch(pattern, txt);
+        new Kmp().KMPSearch(txt, pattern);
 
         txt = "ABABDABACDABABCABAB";
         pattern = "ABABCABAB";
         System.out.println("For text: " + txt);
         System.out.println("And pattern: " + pattern);
-        new Kmp().KMPSearch(pattern, txt);
+        new Kmp().KMPSearch(txt, pattern);
 
     }
 }
