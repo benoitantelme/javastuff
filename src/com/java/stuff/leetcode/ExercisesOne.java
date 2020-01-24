@@ -1,9 +1,6 @@
 package com.java.stuff.leetcode;
 
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class ExercisesOne {
 
@@ -93,10 +90,10 @@ public class ExercisesOne {
 
 
     public static void main(String args[]) {
-//        System.out.println(defangIPaddr("1.1.1.1"));
-//        System.out.println(Arrays.toString(decompressRLElist(new int[]{1,2,3,4})));
-//        System.out.println(Arrays.toString(sumZero(1)));
-//        System.out.println(Arrays.toString(sortedSquares(new int[]{-7,-3,2,3,11})));
+        System.out.println(defangIPaddr("1.1.1.1"));
+        System.out.println(Arrays.toString(decompressRLElist(new int[]{1,2,3,4})));
+        System.out.println(Arrays.toString(sumZero(1)));
+        System.out.println(Arrays.toString(sortedSquares(new int[]{-7,-3,2,3,11})));
         System.out.println(fib(3));
 
     }
