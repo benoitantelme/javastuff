@@ -26,6 +26,20 @@ public class ExercisesEleven {
         return sum;
     }
 
+    public static TreeNode mergeTrees(TreeNode t1, TreeNode t2) {
+        if(t1 == null)
+            return t2;
+        else if(t2 == null)
+            return t1;
+
+        TreeNode t3 = new TreeNode(t1.val + t2.val);
+        t3.left = mergeTrees(t1.left, t2.left);
+        t3.right = mergeTrees(t1.right, t2.right);
+
+        return t3;
+    }
+
+
     public static void main(String args[]) {
         TreeNode tree = new TreeNode(10);
         tree.add(5);
@@ -35,6 +49,20 @@ public class ExercisesEleven {
         tree.add(18);
         System.out.println(rangeSumBST(tree, 7, 15));
 
+
+
+        TreeNode tree1 = new TreeNode(1);
+        tree1.left = new TreeNode(3);
+        tree1.right = new TreeNode(2);
+        tree1.left.left = new TreeNode(5);
+
+        TreeNode tree2 = new TreeNode(2);
+        tree2.left = new TreeNode(1);
+        tree2.right = new TreeNode(3);
+        tree2.left.right = new TreeNode(4);
+        tree2.right.right = new TreeNode(7);
+        TreeNode t3 = mergeTrees(tree1, tree2);
+        System.out.println();
     }
 
     static class TreeNode {
