@@ -88,6 +88,22 @@ public class ExercisesTen {
         return result;
     }
 
+    static class RecentCounter {
+        Queue<Integer> queue = new LinkedList<>();
+        public RecentCounter() {
+
+        }
+
+        public int ping(int t) {
+            queue.add(t);
+
+            while(queue.peek() < t - 3000)
+                queue.poll();
+
+            return queue.size();
+        }
+    }
+
     public static void main(String args[]) {
         System.out.println(removeOuterParentheses("(()())(())"));
 
@@ -95,6 +111,13 @@ public class ExercisesTen {
 
         System.out.println(calPoints(new String[]{"5","2","C","D","+"}));
         System.out.println(calPoints(new String[]{"5","-2","4","C","D","9","+","+"}));
+
+        RecentCounter cnt = new RecentCounter();
+        System.out.println(cnt.ping(642));
+        System.out.println(cnt.ping(1849));
+        System.out.println(cnt.ping(4921));
+        System.out.println(cnt.ping(5936));
+        System.out.println(cnt.ping(5957));
     }
 
 }
