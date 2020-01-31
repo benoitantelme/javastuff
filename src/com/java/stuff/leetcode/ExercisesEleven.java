@@ -1,9 +1,6 @@
 package com.java.stuff.leetcode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 public class ExercisesEleven {
 
@@ -117,6 +114,56 @@ public class ExercisesEleven {
         return maxDepthRecursive(root, 0, 0);
     }
 
+    private static void invertTreeRecursive(TreeNode current) {
+        if(current == null)
+            return;
+
+        TreeNode temp = current.left;
+        current.left = current.right;
+        current.right = temp;
+
+        if(current.left != null)
+            invertTreeRecursive(current.left);
+
+        if(current.right != null)
+            invertTreeRecursive(current.right);
+    }
+    public static TreeNode invertTree(TreeNode root) {
+        invertTreeRecursive(root);
+        return root;
+    }
+
+    /**
+     * @param root
+     * @return the leaf sequence, a list containing the leaves values from left to right
+     */
+    private static List<Integer> getLeafSequence(TreeNode root){
+        List<Integer> seq = new ArrayList<>();
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+
+        while(!stack.isEmpty()){
+            TreeNode current = stack.pop();
+
+            if(current.left != null)
+                stack.push(current.left);
+            if(current.right != null)
+                stack.push(current.right);
+
+            if(current.left == null && current.right == null)
+                seq.add(current.val);
+        }
+
+        return seq;
+    }
+    public static boolean leafSimilar(TreeNode root1, TreeNode root2) {
+        if(getLeafSequence(root1).equals(getLeafSequence(root2)))
+            return true;
+
+        return false;
+    }
+
     public static void main(String args[]) {
         TreeNode tree = new TreeNode(10);
         tree.add(5);
@@ -152,6 +199,16 @@ public class ExercisesEleven {
         tree.add(15);
         System.out.println(maxDepth(tree));
 
+        tree2 = new TreeNode(4);
+        tree2.left = new TreeNode(2);
+        tree2.right = new TreeNode(7);
+        tree2.left.left = new TreeNode(1);
+        tree2.left.right = new TreeNode(3);
+        tree2.right.left = new TreeNode(6);
+        tree2.right.right = new TreeNode(9);
+        tree2 = invertTree(tree2);
+        System.out.println();
+
     }
 
     static class TreeNode {
@@ -176,7 +233,6 @@ public class ExercisesEleven {
             } else if (value > current.val) {
                 current.right = addRecursive(current.right, value);
             } else {
-                // value already exists
                 return current;
             }
 
