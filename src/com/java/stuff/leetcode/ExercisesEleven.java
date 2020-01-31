@@ -1,7 +1,9 @@
 package com.java.stuff.leetcode;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 public class ExercisesEleven {
 
@@ -39,6 +41,81 @@ public class ExercisesEleven {
         return t3;
     }
 
+    public static TreeNode searchBST(TreeNode root, int val) {
+        return searchBSTRecursive(root, val);
+    }
+    private static TreeNode searchBSTRecursive(TreeNode current, int value) {
+        if (current == null) {
+            return null;
+        }
+
+        if (value < current.val) {
+            return searchBSTRecursive(current.left, value);
+        } else if (value > current.val) {
+            return searchBSTRecursive(current.right, value);
+        } else {
+            return current;
+        }
+    }
+
+    public static int maxDepthStack(TreeNode root) {
+        if(root == null)
+            return 0;
+
+        HashMap<TreeNode, Integer> map = new HashMap<>();
+        int maxDepth;
+
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        map.put(root, 1);
+        maxDepth = 1;
+
+        while(!stack.isEmpty()){
+            TreeNode current = stack.pop();
+
+            if(current.left != null){
+                int newMax = map.get(current) + 1;
+                if(newMax > maxDepth)
+                    maxDepth = newMax;
+
+                stack.push(current.left);
+                map.put(current.left, newMax);
+            }
+            if(current.right != null){
+                int newMax = map.get(current) + 1;
+                if(newMax > maxDepth)
+                    maxDepth = newMax;
+
+                stack.push(current.right);
+                map.put(current.right, newMax);
+            }
+        }
+
+        return maxDepth;
+    }
+
+    private static int maxDepthRecursive(TreeNode current, int max, int previousDepth) {
+        if(current == null)
+            return max;
+
+        previousDepth ++;
+        if(max < previousDepth)
+            max = previousDepth;
+
+        if(current.left != null)
+            max = maxDepthRecursive(current.left, max, previousDepth);
+
+        if(current.right != null)
+            max = maxDepthRecursive(current.right, max, previousDepth);
+
+        return max;
+    }
+    public static int maxDepth(TreeNode root) {
+        if(root == null)
+            return 0;
+
+        return maxDepthRecursive(root, 0, 0);
+    }
 
     public static void main(String args[]) {
         TreeNode tree = new TreeNode(10);
@@ -48,8 +125,6 @@ public class ExercisesEleven {
         tree.add(7);
         tree.add(18);
         System.out.println(rangeSumBST(tree, 7, 15));
-
-
 
         TreeNode tree1 = new TreeNode(1);
         tree1.left = new TreeNode(3);
@@ -62,7 +137,21 @@ public class ExercisesEleven {
         tree2.left.right = new TreeNode(4);
         tree2.right.right = new TreeNode(7);
         TreeNode t3 = mergeTrees(tree1, tree2);
-        System.out.println();
+
+        tree = new TreeNode(4);
+        tree.add(2);
+        tree.add(1);
+        tree.add(3);
+        tree.add(7);
+        tree = searchBST(tree, 2);
+
+        tree = new TreeNode(7);
+        tree.add(3);
+        tree.add(9);
+        tree.add(20);
+        tree.add(15);
+        System.out.println(maxDepth(tree));
+
     }
 
     static class TreeNode {
