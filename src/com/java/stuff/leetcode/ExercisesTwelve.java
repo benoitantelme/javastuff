@@ -1,9 +1,6 @@
 package com.java.stuff.leetcode;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.TreeMap;
 
 public class ExercisesTwelve {
 
@@ -61,6 +58,8 @@ public class ExercisesTwelve {
 
         return maxProfit;
     }
+
+
 
     public static void main(String args[]) {
         System.out.println(lastStoneWeight(new int[]{2, 7, 4, 1, 8, 1}));
