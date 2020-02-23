@@ -36,7 +36,7 @@ public class MedianSlidingWindow {
             }
             last = nums[i];
         }
-        
+
         return result;
     }
 
