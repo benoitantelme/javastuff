@@ -91,78 +91,34 @@ public class StringMedium {
     }
 
 
-    private static int addNextValue(String s, int i, Stack<Character> stack){
-        while(i < s.length() && s.charAt(i) == ' ')
-            i++;
-        if(i < s.length())
-            stack.push(s.charAt(i++));
 
-        return i;
-    }
     public static int calculate(String s) {
-        if(s.length() == 1)
-            return Integer.valueOf(s);
-
+        Stack<Integer> stack = new Stack<>();
         int res = 0;
-        Stack<Character> stack = new Stack<>();
+        int nbr = 0;
+        char sign = '+';
 
-        int i = 0;
-        i = addNextValue(s, i, stack);
-        while (i < s.length()) {
-            char c = stack.peek();
-            if (c == '*' || c == '/') {
-                //priority for mult or div
-                char operator = stack.pop();
-                int first = Character.getNumericValue(stack.pop());
-                i = addNextValue(s, i, stack);
-                int second = Character.getNumericValue(stack.pop());
+        for(int i = 0 ; i < s.length() ; i++) {
+            char c = s.charAt(i);
 
-                int tmp;
-                if (operator == '*')
-                    tmp = first * second;
-                else
-                    tmp = first / second;
-
-                //check for chained mult or div
-                while(i < s.length() && (s.charAt(i) == '*' || s.charAt(i) == '/')){
-                    operator = s.charAt(i++);
-                    i = addNextValue(s, i, stack);
-                    second = Character.getNumericValue(stack.pop());
-                    if (operator == '*')
-                        tmp = tmp * second;
-                    else
-                        tmp = tmp / second;
+            if (Character.isDigit(c))
+                nbr = nbr * 10 + (c - '0');
+            if((!Character.isDigit(c) && c != ' ') || i == s.length()-1){
+                if(sign == '+')
+                    stack.add(nbr);
+                if(sign == '-')
+                    stack.add(-nbr);
+                if(sign == '*' || sign == '/') {
+                    stack.add((sign == '*') ? stack.pop() * nbr : stack.pop() / nbr);
                 }
 
-                //add all mult/div to the result
-                res += tmp;
-
-                // add all the previous ones to the result
-                while (!stack.isEmpty()) {
-                    char plusorminus = stack.pop();
-                    int num = Character.getNumericValue(stack.pop());
-                    if (plusorminus == '+')
-                        res += num;
-                    else
-                        res -= num;
-                }
-
-                if(i < s.length())
-                    i = addNextValue(s, i, stack);
-            } else {
-                i = addNextValue(s, i, stack);
+                sign = c;
+                nbr = 0;
             }
         }
 
-        // finish the stack
-        while (!stack.isEmpty()) {
-            int num = Character.getNumericValue(stack.pop());
-            char plusorminus = stack.pop();
-            if (plusorminus == '+')
-                res += num;
-            else
-                res -= num;
-        }
+        for(int n : stack)
+            res += n;
 
         return res;
     }
@@ -182,7 +138,6 @@ public class StringMedium {
         System.out.println(calculate("3+ 2 * 2+2"));
         System.out.println(calculate("3+2*2"));
         System.out.println(calculate(" 3/2 "));
-
     }
 
 }
