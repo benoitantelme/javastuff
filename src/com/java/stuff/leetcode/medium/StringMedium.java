@@ -135,6 +135,7 @@ public class StringMedium {
         System.out.println(findAnagrams("cbaebabacd", "abc"));
         System.out.println(findAnagrams("abab", "ab"));
 
+        System.out.println(calculate("3*7+2"));
         System.out.println(calculate("3+ 2 * 2+2"));
         System.out.println(calculate("3+2*2"));
         System.out.println(calculate(" 3/2 "));
