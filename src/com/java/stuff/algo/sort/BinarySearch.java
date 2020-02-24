@@ -1,4 +1,4 @@
-package com.java.stuff.sort;
+package com.java.stuff.algo.sort;
 
 public class BinarySearch {
     int[] array;

@@ -1,4 +1,4 @@
-package com.java.stuff.text;
+package com.java.stuff.algo.text;
 
 import java.util.Arrays;
 

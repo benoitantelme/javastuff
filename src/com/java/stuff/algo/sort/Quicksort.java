@@ -1,4 +1,4 @@
-package com.java.stuff.sort;
+package com.java.stuff.algo.sort;
 
 import java.util.Arrays;
 import java.util.Stack;
