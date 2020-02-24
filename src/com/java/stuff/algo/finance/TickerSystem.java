@@ -13,17 +13,20 @@ public class TickerSystem {
         ticks = new HashSet<>();
     }
 
-    void addOrUpdate(String stock, double price){
+    void addOrUpdate(String stock, double price) {
         Tick newTick = new Tick(stock, price);
 
-        if(ticks.contains(newTick)){
+        if (ticks.contains(newTick)) {
             queue.remove(newTick);
-        }else{
-            if(queue.size() >= size)
-                queue.remove();
+        } else {
+            if (queue.size() >= size) {
+                Tick removed = queue.remove();
+                ticks.remove(removed);
+            }
         }
 
         queue.add(newTick);
+        ticks.add(newTick);
     }
 
     Tick[] top() {
@@ -31,7 +34,7 @@ public class TickerSystem {
     }
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         TickerSystem ts = new TickerSystem(3);
         ts.addOrUpdate("SocGen", 8.0);
         ts.addOrUpdate("Alphabet", 12.0);
@@ -42,22 +45,22 @@ public class TickerSystem {
 
     }
 
-    class Tick implements Comparable<Tick>{
+    class Tick implements Comparable<Tick> {
         String symbol;
-        double value;
+        double price;
 
 
-        public Tick(String symbol, double value) {
+        public Tick(String symbol, double price) {
             this.symbol = symbol;
-            this.value = value;
+            this.price = price;
         }
 
         @Override
         public int compareTo(Tick o) {
-            double comp = this.value - o.value;
-            if(comp > 0)
+            double comp = this.price - o.price;
+            if (comp > 0)
                 return 1;
-            else if(comp < 0)
+            else if (comp < 0)
                 return -1;
             else
                 return 0;
@@ -67,7 +70,7 @@ public class TickerSystem {
         public String toString() {
             return "Tick{" +
                     "symbol='" + symbol + '\'' +
-                    ", value=" + value +
+                    ", price=" + price +
                     '}';
         }
 
