@@ -61,6 +61,24 @@ public class TreeMedium {
         return level;
     }
 
+    public static int recDistributeCoins(TreeNode node, int[] res) {
+        int moves = 0;
+        if(node.left != null)
+            moves += recDistributeCoins(node.left, res);
+        if(node.right != null)
+            moves += recDistributeCoins(node.right, res);
+
+        moves += node.val - 1;
+        res[0] += Math.abs(moves);
+
+        return moves;
+    }
+    public static int distributeCoins(TreeNode root) {
+        int[] res = new int[]{0};
+        recDistributeCoins(root, res);
+        return res[0];
+    }
+
 
     public static void main(String args[]) {
         System.out.println(pathInZigZagTree(16));
@@ -82,7 +100,25 @@ public class TreeMedium {
         root.right.right.left = new TreeNode(-32127);
         System.out.println(maxLevelSum(root));
 
-
+        System.out.println("Moves:");
+        root = new TreeNode(3);
+        root.left = new TreeNode(0);
+        root.right = new TreeNode(0);
+        System.out.println(distributeCoins(root));
+        root = new TreeNode(0);
+        root.left = new TreeNode(3);
+        root.right = new TreeNode(0);
+        System.out.println(distributeCoins(root));
+        root = new TreeNode(4);
+        root.left = new TreeNode(0);
+        root.left.right = new TreeNode(0);
+        root.left.right.right = new TreeNode(0);
+        System.out.println(distributeCoins(root));
+        root = new TreeNode(1);
+        root.left = new TreeNode(0);
+        root.right = new TreeNode(0);
+        root.left.right = new TreeNode(3);
+        System.out.println(distributeCoins(root));
     }
 
 
