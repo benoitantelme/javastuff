@@ -1,5 +1,9 @@
 package com.java.stuff.leetcode.medium;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class MathMedium {
 
 
@@ -86,6 +90,43 @@ public class MathMedium {
         return dp[0][nums.length - 1] > 0;
     }
 
+    private int grayed(int n){
+        char[] chars = Integer.toBinaryString(n).toCharArray();
+        for(int i = chars.length-1; i > 0; i--)
+            if(chars[i-1] == '1')
+                chars[i] = (chars[i] == '1') ? '0' : '1';
+
+        return Integer.parseInt(String.valueOf(chars), 2);
+    }
+    public List<Integer> circularPermutation(int n, int start) {
+        List<Integer> result = new ArrayList();
+
+        int i = 0;
+        int size = (int) Math.pow(2, n);
+        List<Integer> secondPart = new ArrayList<>();
+        while(i < size){
+            int grayed = grayed(i);
+            if(grayed == start)
+                break;
+            else
+                secondPart.add(grayed);
+
+            i++;
+        }
+
+        result.add(start);
+        i++;
+        while(i < size)
+            result.add(grayed(i++));
+
+        result.addAll(secondPart);
+
+        return result;
+    }
+    //    Output: [3,2,0,1]
+    //    Explanation: The binary representation of the permutation is (11,10,00,01).
+    //    All the adjacent element differ by one bit. Another valid permutation is [3,1,0,2]
+
 
     public static void main(String[] args){
         MathMedium mm = new MathMedium();
@@ -99,6 +140,9 @@ public class MathMedium {
         System.out.println(mm.complexNumberMultiply("1+-1i", "1+-1i"));
 
         System.out.println(mm.stoneGame(new int[]{5,3,4,5}));
+
+        System.out.println(mm.circularPermutation(2, 3));
+        System.out.println(mm.circularPermutation(3, 2));
 
     }
 
