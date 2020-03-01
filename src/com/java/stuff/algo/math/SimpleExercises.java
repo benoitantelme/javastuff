@@ -103,6 +103,67 @@ public class SimpleExercises {
         System.out.println(medians);
     }
 
+    /**
+     * @param points
+     * @return the y value of the horizontal line being the median for the points (less distance from each point)
+     */
+    public double calculateHorizontalMedian(List<int[]> points){
+        int ys = 0;
+        for(int[] point : points)
+            ys += point[1];
+
+        return (double) ys /  points.size();
+    }
+
+    /**
+     * @param points
+     * a = y2-y1/x2-x1 slope
+     * b = y1 -ax1 because y1 = ax1 + b
+     *
+     * @return the x,y value of the median equation ax+b=y
+     */
+    public double[] calculate2PointsMedian(List<int[]> points){
+        int[] one = points.get(0);
+        int[] two = points.get(1);
+
+        double a = (double) (two[1] - one[1])/(two[0] - one[0]);
+        double b = one[1] - a * one[0];
+
+        return new double[]{a, b};
+    }
+
+    public double stringToDouble(String str){
+        // sign
+        boolean minus = false;
+        if(str.toCharArray()[0] == '+' || str.toCharArray()[0] == '-'){
+            if(str.toCharArray()[0] == '-')
+                minus = true;
+
+            str = str.substring(1);
+        }
+
+        String[] splitted = str.split("\\.");
+
+        // integer part
+        double result = 0;
+        for(char c : splitted[0].toCharArray())
+            result = result * 10 + Character.getNumericValue(c);
+
+        // decimal part
+        if(splitted.length > 1) {
+            double decimals = 0;
+            for (char c : splitted[1].toCharArray())
+                decimals = (decimals + (double) Character.getNumericValue(c)) /10;
+
+            result += decimals;
+        }
+
+        if(minus)
+            result *= -1;
+
+        return result;
+    }
+
     public static void main(String[] args){
         SimpleExercises sp = new SimpleExercises();
         System.out.println(sp.pow(2, 4));
@@ -116,6 +177,21 @@ public class SimpleExercises {
 
         System.out.println("Median Element");
         sp.medianElement();
+
+        System.out.println(sp.calculateHorizontalMedian(
+                List.of(new int[]{1, 1}, new int[]{-1, -1})));
+        System.out.println(sp.calculateHorizontalMedian(
+                List.of(new int[]{2, 2}, new int[]{-4, -4})));
+        System.out.println(sp.calculateHorizontalMedian(
+                List.of(new int[]{1, 1}, new int[]{2, 3}, new int[]{-1, -2})));
+
+        System.out.println(Arrays.toString(sp.calculate2PointsMedian(List.of(new int[]{1, 1}, new int[]{-1, -1})))); // y = x
+        System.out.println(Arrays.toString(sp.calculate2PointsMedian(List.of(new int[]{0, 0}, new int[]{2, 1})))); // y = x/2
+
+        System.out.println(sp.stringToDouble("5"));
+        System.out.println(sp.stringToDouble("-5"));
+        System.out.println(sp.stringToDouble("5.22"));
+        System.out.println(sp.stringToDouble("-5.22"));
     }
 
 
