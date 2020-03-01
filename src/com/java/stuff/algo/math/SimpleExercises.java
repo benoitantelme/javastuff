@@ -150,12 +150,14 @@ public class SimpleExercises {
             result = result * 10 + Character.getNumericValue(c);
 
         // decimal part
+        double power = 1;
         if(splitted.length > 1) {
             double decimals = 0;
-            for (char c : splitted[1].toCharArray())
-                decimals = (decimals + (double) Character.getNumericValue(c)) /10;
-
-            result += decimals;
+            for (char c : splitted[1].toCharArray()) {
+                decimals = decimals * 10 + Character.getNumericValue(c);
+                power *= 10;
+            }
+            result += decimals / power;
         }
 
         if(minus)
@@ -190,7 +192,7 @@ public class SimpleExercises {
 
         System.out.println(sp.stringToDouble("5"));
         System.out.println(sp.stringToDouble("-5"));
-        System.out.println(sp.stringToDouble("5.22"));
+        System.out.println(sp.stringToDouble("5.23"));
         System.out.println(sp.stringToDouble("-5.22"));
     }
 
