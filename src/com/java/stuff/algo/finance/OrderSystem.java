@@ -9,7 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class OrderSystem {
-    ConcurrentHashMap<String, Integer> thresholds = new ConcurrentHashMap(10, (float) 0.75, 8);
+    ConcurrentHashMap<String, Integer> thresholds = new ConcurrentHashMap();
     List<ExecutedOrder> executed = new CopyOnWriteArrayList<>();
 
     public void callOrder(String symbol, int price){
