@@ -173,6 +173,17 @@ public class SimpleExercises {
         return sumRec(Arrays.copyOfRange(arr, 1, arr.length), acc + arr[0]);
     }
 
+    public boolean sumRecCheck(int[] arr, int acc, int target) {
+        if(acc == target)
+            return true;
+
+        if(arr.length == 1)
+            return (acc + arr[0]) == target;
+
+        return sumRecCheck(Arrays.copyOfRange(arr, 1, arr.length), acc + arr[0], target);
+    }
+
+
     public static void main(String[] args){
         SimpleExercises sp = new SimpleExercises();
         System.out.println(sp.pow(2, 4));
@@ -202,8 +213,11 @@ public class SimpleExercises {
         System.out.println(sp.stringToDouble("5.23"));
         System.out.println(sp.stringToDouble("-5.22"));
 
-        System.out.println(sp.sumRec(new int[]{1, 2, 3}, 0));
         System.out.println(sp.sumRec(new int[]{15, 12, 13, 10}, 0));
+        System.out.println(sp.sumRec(new int[]{1, 2, 3}, 0));
+
+        System.out.println(sp.sumRecCheck(new int[]{1, 2, 3}, 0, 6));
+        System.out.println(sp.sumRecCheck(new int[]{1, 2, 3}, 0, 2));
 
     }
 
