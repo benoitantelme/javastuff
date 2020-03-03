@@ -84,16 +84,17 @@ public class GraphMedium {
     private static boolean isSafe(int[][] graph, int vertex, int[] visited) {
         visited[vertex] = 1;
 
-        for(int edge : graph[vertex]){
-            if(visited[edge] == 1)
+        for (int edge : graph[vertex]) {
+            if (visited[edge] == 1)
                 return false;
-            if(visited[edge] == 0 && !isSafe(graph, edge, visited))
+            if (visited[edge] == 0 && !isSafe(graph, edge, visited))
                 return false;
         }
 
         visited[vertex] = -1;
         return true;
     }
+
     public static List<Integer> eventualSafeNodes(int[][] graph) {
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < graph.length; i++) {
@@ -102,6 +103,32 @@ public class GraphMedium {
         }
 
         return result;
+    }
+
+    public static boolean isBipartite(int[][] graph) {
+        int[] colors = new int[graph.length];
+
+        for (int i = 0; i < graph.length; i++) {
+            int color = 1;
+            Queue<Integer> queue = new LinkedList<>();
+            queue.add(i);
+            if (colors[i] == 0)
+                colors[i] = color;
+            while (!queue.isEmpty()) {
+                Integer current = queue.poll();
+                if (colors[current] == 0)
+                    colors[current] = color;
+                for (int neighbour : graph[current]) {
+                    if (colors[neighbour] == 0) {
+                        queue.add(neighbour);
+                        colors[neighbour] = -colors[current];
+                    } else if (colors[neighbour] == colors[current])
+                        return false;
+                }
+            }
+        }
+
+        return true;
     }
 
 
@@ -118,8 +145,10 @@ public class GraphMedium {
                 {{1, 0, 0, 1, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 1, 0}}));
 
         System.out.println(eventualSafeNodes(new int[][]{{1, 2}, {2, 3}, {5}, {0}, {5}, {}, {}}));
-        System.out.println(eventualSafeNodes(new int[][]{{},{0,2,3,4},{3},{4},{}}));
+        System.out.println(eventualSafeNodes(new int[][]{{}, {0, 2, 3, 4}, {3}, {4}, {}}));
 
+        System.out.println(isBipartite(new int[][]{{1, 3}, {0, 2}, {1, 3}, {0, 2}}));
+        System.out.println(isBipartite(new int[][]{{1, 2, 3}, {0, 2}, {0, 1, 3}, {0, 2}}));
     }
 
 
