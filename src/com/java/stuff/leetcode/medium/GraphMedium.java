@@ -4,7 +4,7 @@ import java.util.*;
 
 public class GraphMedium {
 
-    public static boolean canVisitAllRooms(List<List<Integer>> rooms) {
+    public boolean canVisitAllRooms(List<List<Integer>> rooms) {
         Set<Integer> set = new HashSet<>();
         for (int i = 1; i < rooms.size(); i++)
             set.add(i);
@@ -30,7 +30,7 @@ public class GraphMedium {
         return set.isEmpty();
     }
 
-    public static boolean canReach(int[] arr, int start) {
+    public boolean canReach(int[] arr, int start) {
         boolean[] visited = new boolean[arr.length];
 
         Queue<Integer> queue = new LinkedList<>();
@@ -56,7 +56,7 @@ public class GraphMedium {
         return false;
     }
 
-    public static int countServers(int[][] grid) {
+    public int countServers(int[][] grid) {
         int[] row = new int[grid.length];
         int[] column = new int[grid[0].length];
         Set<int[]> servers = new HashSet<>();
@@ -81,7 +81,7 @@ public class GraphMedium {
     }
 
 
-    private static boolean isSafe(int[][] graph, int vertex, int[] visited) {
+    private boolean isSafe(int[][] graph, int vertex, int[] visited) {
         visited[vertex] = 1;
 
         for (int edge : graph[vertex]) {
@@ -95,7 +95,7 @@ public class GraphMedium {
         return true;
     }
 
-    public static List<Integer> eventualSafeNodes(int[][] graph) {
+    public List<Integer> eventualSafeNodes(int[][] graph) {
         List<Integer> result = new ArrayList<>();
         for (int i = 0; i < graph.length; i++) {
             if (isSafe(graph, i, new int[graph.length]))
@@ -105,7 +105,7 @@ public class GraphMedium {
         return result;
     }
 
-    public static boolean isBipartite(int[][] graph) {
+    public boolean isBipartite(int[][] graph) {
         int[] colors = new int[graph.length];
 
         for (int i = 0; i < graph.length; i++) {
@@ -132,24 +132,70 @@ public class GraphMedium {
     }
 
 
-    public static void main(String[] args) {
-        System.out.println(canVisitAllRooms(List.of(List.of(1), List.of(2), List.of(3), new ArrayList<>())));
+    public int networkDelayTime(int[][] times, int N, int K) {
+        HashMap<Integer, List<int[]>> map = new HashMap<>();
+        for (int i = 0; i < times.length; i++) {
+            int[] edges = times[i];
+            map.computeIfAbsent(edges[0], k -> new ArrayList()).add(new int[]{edges[1], edges[2]});
+        }
 
-        System.out.println(canReach(new int[]{4, 2, 3, 0, 3, 1, 2}, 5));
+        PriorityQueue<int[]> heap = new PriorityQueue<>(Comparator.comparingInt(info -> info[1]));
+        heap.offer(new int[]{K, 0});
 
-        System.out.println(countServers(new int[][]{{1, 0}, {0, 1}}));
-        System.out.println(countServers(new int[][]{{1, 0}, {1, 1}}));
-        System.out.println(countServers(new int[][]
-                {{1, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
-        System.out.println(countServers(new int[][]
-                {{1, 0, 0, 1, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 1, 0}}));
+        Map<Integer, Integer> distances = new HashMap<>();
+        while (!heap.isEmpty()) {
+            int[] current = heap.poll();
+            int node = current[0];
+            int dist = current[1];
 
-        System.out.println(eventualSafeNodes(new int[][]{{1, 2}, {2, 3}, {5}, {0}, {5}, {}, {}}));
-        System.out.println(eventualSafeNodes(new int[][]{{}, {0, 2, 3, 4}, {3}, {4}, {}}));
+            if(distances.containsKey(node))
+                continue;
 
-        System.out.println(isBipartite(new int[][]{{1, 3}, {0, 2}, {1, 3}, {0, 2}}));
-        System.out.println(isBipartite(new int[][]{{1, 2, 3}, {0, 2}, {0, 1, 3}, {0, 2}}));
+            distances.put(node, dist);
+            if(!map.containsKey(node))
+                continue;
+
+            for(int[] neighbour : map.get(node)){
+                int neighbourNode = neighbour[0];
+                int neighbourDistance = neighbour[1];
+                if(!distances.containsKey(neighbourNode))
+                    heap.add(new int[]{neighbourNode, dist+neighbourDistance});
+            }
+        }
+
+        if (distances.size() <= N-1)
+            return -1;
+        int result = 0;
+        for (int dist: distances.values())
+            result = Math.max(result, dist);
+        return result;
     }
 
+    public static void main(String[] args) {
+        GraphMedium gm = new GraphMedium();
+        System.out.println(gm.canVisitAllRooms(List.of(List.of(1), List.of(2), List.of(3), new ArrayList<>())));
+
+        System.out.println(gm.canReach(new int[]{4, 2, 3, 0, 3, 1, 2}, 5));
+
+        System.out.println(gm.countServers(new int[][]{{1, 0}, {0, 1}}));
+        System.out.println(gm.countServers(new int[][]{{1, 0}, {1, 1}}));
+        System.out.println(gm.countServers(new int[][]
+                {{1, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
+        System.out.println(gm.countServers(new int[][]
+                {{1, 0, 0, 1, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 1, 0}}));
+
+        System.out.println(gm.eventualSafeNodes(new int[][]{{1, 2}, {2, 3}, {5}, {0}, {5}, {}, {}}));
+        System.out.println(gm.eventualSafeNodes(new int[][]{{}, {0, 2, 3, 4}, {3}, {4}, {}}));
+
+        System.out.println(gm.isBipartite(new int[][]{{1, 3}, {0, 2}, {1, 3}, {0, 2}}));
+        System.out.println(gm.isBipartite(new int[][]{{1, 2, 3}, {0, 2}, {0, 1, 3}, {0, 2}}));
+
+        System.out.println(gm.networkDelayTime(new int[][]{{2, 1, 1}, {2, 3, 1}, {3, 4, 1}}, 4, 2));
+        System.out.println(gm.networkDelayTime(new int[][]{{1, 2, 1}, {2, 3, 2}, {1, 3, 2}}, 3, 1));
+        System.out.println(gm.networkDelayTime(new int[][]{{1, 2, 1}, {2, 3, 7}, {1, 3, 4}, {2, 1, 2}}, 3, 2));
+        System.out.println(gm.networkDelayTime(new int[][]{{1, 2, 1}, {2, 1, 3}}, 2, 2));
+        System.out.println(gm.networkDelayTime(new int[][]{{1, 2, 1}}, 2, 2));
+        System.out.println(gm.networkDelayTime(new int[][]{{1, 2, 1}}, 2, 1));
+    }
 
 }
