@@ -1,4 +1,4 @@
-package com.java.stuff.leetcode.medium;
+package com.java.stuff.leetcode.medium.multithreading;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.IntConsumer;

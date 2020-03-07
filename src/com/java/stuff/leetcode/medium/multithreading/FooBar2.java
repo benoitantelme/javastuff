@@ -1,50 +1,38 @@
 package com.java.stuff.leetcode.medium.multithreading;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.Semaphore;
 
-public class FooBar {
+public class FooBar2 {
     private int n;
-    private AtomicInteger cnt;
-    private AtomicBoolean workStarted;
+    private Semaphore semFoo;
+    private Semaphore semBar;
 
-    public FooBar(int n) {
+    public FooBar2(int n) {
         this.n = n;
-        cnt = new AtomicInteger(0);
-        workStarted = new AtomicBoolean(false);
+        this.semFoo = new Semaphore(0);
+        this.semBar = new Semaphore(0);
     }
 
     public void foo(Runnable printFoo) throws InterruptedException {
-        while(true){
-            int cntState = cnt.get();
-            if(cntState == n)
-                return;
+        for (int i = 0; i < n; i++) {
+            if (i != 0)
+                this.semFoo.acquire();
 
-            boolean state = workStarted.get();
-            if(state == false){
-                printFoo.run();
-                workStarted.compareAndSet(false, true);
-            }
+            printFoo.run();
+            this.semBar.release();
         }
     }
 
     public void bar(Runnable printBar) throws InterruptedException {
-        while(true){
-            int cntState = cnt.get();
-            if(cntState == n)
-                return;
-
-            boolean state = workStarted.get();
-            if(state == true){
-                printBar.run();
-                cnt.incrementAndGet();
-                workStarted.compareAndSet(true, false);
-            }
+        for (int i = 0; i < n; i++) {
+            this.semBar.acquire();
+            printBar.run();
+            this.semFoo.release();
         }
     }
 
     public static void main(String[] args) {
-        FooBar foobar = new FooBar(2);
+        FooBar2 foobar = new FooBar2(2);
 
         Thread a = new Thread(() -> {
             try {
