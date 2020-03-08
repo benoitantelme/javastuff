@@ -9,14 +9,13 @@ public class FooBar2 {
 
     public FooBar2(int n) {
         this.n = n;
-        this.semFoo = new Semaphore(0);
+        this.semFoo = new Semaphore(1);
         this.semBar = new Semaphore(0);
     }
 
     public void foo(Runnable printFoo) throws InterruptedException {
         for (int i = 0; i < n; i++) {
-            if (i != 0)
-                this.semFoo.acquire();
+            this.semFoo.acquire();
 
             printFoo.run();
             this.semBar.release();
