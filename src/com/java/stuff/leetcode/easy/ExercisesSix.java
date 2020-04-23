@@ -1,10 +1,10 @@
-package com.java.stuff.leetcode;
+package com.java.stuff.leetcode.easy;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static com.java.stuff.leetcode.ExercisesThree.createList;
+import static com.java.stuff.leetcode.easy.ExercisesThree.createList;
 
 public class ExercisesSix {
 
