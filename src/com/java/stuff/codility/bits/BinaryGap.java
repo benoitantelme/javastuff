@@ -1,4 +1,4 @@
-package com.java.stuff.bits;
+package com.java.stuff.codility.bits;
 
 public class BinaryGap {
 
