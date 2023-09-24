@@ -6,13 +6,13 @@ import java.util.Set;
 public class ContainsDuplicate {
 
     public boolean containsDuplicate(int[] nums) {
-        if(nums == null)
+        if (nums == null)
             return false;
 
         Set<Integer> set = new HashSet<>();
 
-        for (int n: nums) {
-            if(set.contains(n))
+        for (int n : nums) {
+            if (set.contains(n))
                 return true;
             else set.add(n);
         }
@@ -23,13 +23,13 @@ public class ContainsDuplicate {
     public static void main(String args[]) {
         ContainsDuplicate cd = new ContainsDuplicate();
 
-        int[] nums = {1,2,3,1};
+        int[] nums = {1, 2, 3, 1};
         System.out.println(cd.containsDuplicate(nums));
 
-        nums = new int[]{1,2,3,4};
+        nums = new int[]{1, 2, 3, 4};
         System.out.println(cd.containsDuplicate(nums));
 
-        nums = new int[]{1,1,1,3,3,4,3,2,4,2};
+        nums = new int[]{1, 1, 1, 3, 3, 4, 3, 2, 4, 2};
         System.out.println(cd.containsDuplicate(nums));
 
         nums = new int[]{};
