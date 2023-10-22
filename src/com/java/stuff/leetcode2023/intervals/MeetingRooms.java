@@ -1,4 +1,4 @@
-package com.java.stuff.intervals;
+package com.java.stuff.leetcode2023.intervals;
 
 import java.util.Arrays;
 

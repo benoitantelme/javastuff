@@ -1,8 +1,6 @@
-package com.java.stuff.intervals;
+package com.java.stuff.leetcode2023.intervals;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class MeetingRoomsTwo {
