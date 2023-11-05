@@ -6,11 +6,88 @@ import java.util.stream.IntStream;
 public class CourseScheduleII {
 
     public int[] findOrder(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 0 || prerequisites[0].length == 0)
+            return IntStream.range(0, numCourses)
+                    .toArray();
+
+        Map<Integer, List<Integer>> adjList = new HashMap<>();
+        int[] needed = new int[numCourses];
+
+        //creating the adjlist
+        for (int[] prereq : prerequisites) {
+            int course = prereq[0];
+            int prerequisite = prereq[1];
+            List<Integer> list = adjList.getOrDefault(prerequisite, new ArrayList<>());
+            list.add(course);
+            adjList.put(prerequisite, list);
+
+            needed[course]++;
+        }
+
+        // add starting nodes to the queue
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++)
+            if (needed[i] == 0)
+                queue.offer(i);
+
+        int i = 0;
+        int[] topologicalOrder = new int[numCourses];
+        while (!queue.isEmpty()) {
+            int node = queue.remove();
+            topologicalOrder[i++] = node;
+
+            if (adjList.containsKey(node)) {
+                for (Integer neighbor : adjList.get(node)) {
+                    needed[neighbor]--;
+
+                    if (needed[neighbor] == 0) {
+                        queue.add(neighbor);
+                    }
+                }
+            }
+        }
+
+        if (i == numCourses) {
+            return topologicalOrder;
+        }
+
+        return new int[0];
+    }
+
+    public static void main(String[] args) {
+        CourseScheduleII cs = new CourseScheduleII();
+
+        System.out.println(Arrays.toString(cs.findOrder(2, new int[][]{{1, 0}})));
+        System.out.println(Arrays.toString(cs.findOrder(4, new int[][]{{1, 0}, {2, 0}, {3, 1}, {3, 2}})));
+        System.out.println(Arrays.toString(cs.findOrder(1, new int[][]{{}})));
+        System.out.println(Arrays.toString(cs.findOrder(2, new int[][]{{}})));
+        System.out.println(Arrays.toString(cs.findOrder(3, new int[][]{{1, 0}})));
+        System.out.println(Arrays.toString(cs.findOrder(2, new int[][]{{0, 1}})));
+        System.out.println(Arrays.toString(cs.findOrder(4, new int[][]{{3, 0}, {0, 1}})));
+
+//        Example 1:
+//        Input: numCourses = 2, prerequisites = [[1,0]]
+//        Output: [0,1]
+//        Explanation: There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1].
+//
+//        Example 2:
+//        Input: numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
+//        Output: [0,2,1,3]
+//        Explanation: There are a total of 4 courses to take. To take course 3 you should have finished both courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0.
+//        So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3].
+//
+//        Example 3:
+//        Input: numCourses = 1, prerequisites = []
+//        Output: [0]
+    }
+
+
+    public int[] findOrderHeavy(int numCourses, int[][] prerequisites) {
         List<Integer> result = new ArrayList<>();
 
-        if(prerequisites.length == 0 || prerequisites[0].length == 0)
+        if (prerequisites.length == 0 || prerequisites[0].length == 0)
             return IntStream.range(0, numCourses)
-                .toArray();
+                    .toArray();
 
         // build graph
         Node[] graph = new Node[20001];
@@ -78,10 +155,10 @@ public class CourseScheduleII {
                 return new int[0];
 
 
-        if(result.size() < numCourses){
+        if (result.size() < numCourses) {
             List<Integer> missings = new ArrayList<>();
-            for(int n : IntStream.range(0, numCourses).toArray())
-                if(!result.contains(n))
+            for (int n : IntStream.range(0, numCourses).toArray())
+                if (!result.contains(n))
                     missings.add(n);
 
             missings.addAll(result);
@@ -91,31 +168,5 @@ public class CourseScheduleII {
         return result.stream().mapToInt(i -> i).toArray();
     }
 
-    public static void main(String[] args) {
-        CourseScheduleII cs = new CourseScheduleII();
-
-        System.out.println(Arrays.toString(cs.findOrder(2, new int[][]{{1, 0}})));
-        System.out.println(Arrays.toString(cs.findOrder(4, new int[][]{{1, 0}, {2, 0}, {3, 1}, {3, 2}})));
-        System.out.println(Arrays.toString(cs.findOrder(1, new int[][]{{}})));
-        System.out.println(Arrays.toString(cs.findOrder(2, new int[][]{{}})));
-        System.out.println(Arrays.toString(cs.findOrder(3, new int[][]{{1, 0}})));
-        System.out.println(Arrays.toString(cs.findOrder(2, new int[][]{{0, 1}})));
-        System.out.println(Arrays.toString(cs.findOrder(4, new int[][]{{3, 0}, {0, 1}})));
-
-//        Example 1:
-//        Input: numCourses = 2, prerequisites = [[1,0]]
-//        Output: [0,1]
-//        Explanation: There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1].
-//
-//        Example 2:
-//        Input: numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
-//        Output: [0,2,1,3]
-//        Explanation: There are a total of 4 courses to take. To take course 3 you should have finished both courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0.
-//        So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3].
-//
-//        Example 3:
-//        Input: numCourses = 1, prerequisites = []
-//        Output: [0]
-    }
 
 }
