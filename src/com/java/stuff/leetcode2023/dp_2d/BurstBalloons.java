@@ -5,6 +5,38 @@ import java.util.stream.Collectors;
 
 public class BurstBalloons {
 
+    int rec(int[] nums, int left, int right, int[][] cache) {
+        if (left + 1 == right)
+            return 0;
+
+        if (cache[left][right] > 0)
+            return cache[left][right];
+
+        int res = 0;
+        for (int i = left + 1; i < right; i++)
+            // bursting i last,
+            res = Math.max(res,
+                    nums[left] * nums[i] * nums[right]
+                            + rec(nums, left, i, cache)
+                            + rec(nums, i, right, cache));
+
+        cache[left][right] = res;
+        return res;
+    }
+
+
+    public int maxCoins(int[] nums) {
+        // padd nums with 1 before and after to simplify while multiplying
+        int[] padded = new int[nums.length + 2];
+        padded[0] = 1;
+        padded[padded.length - 1] = 1;
+        for (int i = 0; i < nums.length; i++)
+            padded[i + 1] = nums[i];
+
+        int[][] cache = new int[padded.length][padded.length];
+        return rec(padded, 0, padded.length - 1, cache);
+    }
+
     public static void main(String[] args) {
         BurstBalloons bb = new BurstBalloons();
 
@@ -25,7 +57,7 @@ public class BurstBalloons {
 //        Output: 10
     }
 
-    public int maxCoins(int[] nums) {
+    public int maxCoinsTle(int[] nums) {
         return recTle(Arrays.stream(nums).boxed().collect(Collectors.toList()), 0, 0);
     }
 
